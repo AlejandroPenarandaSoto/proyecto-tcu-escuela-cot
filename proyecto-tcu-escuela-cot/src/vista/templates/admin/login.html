@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titulo %}Administrador - Iniciar sesión{% endblock %}
+{% block clase_body %}pagina-admin{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-login">
+    <h1 class="titulo-principal">Panel Administrador</h1>
+    <form method="POST" class="formulario-login">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" required autofocus>
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="boton boton-primario">Iniciar sesión</button>
+    </form>
+</section>
+{% endblock %}

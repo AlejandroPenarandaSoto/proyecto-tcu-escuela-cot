@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ grado.nombre }} - Elige tu materia{% endblock %}
+{% block clase_body %}pagina-estudiante{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-seleccion">
+    <a href="{{ url_for('estudiante.seleccion_grado') }}" class="enlace-volver">&larr; Cambiar de grado</a>
+    <h1 class="titulo-principal">{{ grado.nombre }}</h1>
+    <p class="subtitulo">¿Qué materia quieres ver?</p>
+
+    <div class="grid-tarjetas">
+        {% for materia in materias %}
+        <a href="{{ url_for('estudiante.ver_contenido', grado_slug=grado.slug, materia_slug=materia.slug) }}"
+           class="tarjeta tarjeta-materia">
+            <span class="tarjeta-nombre">{{ materia.nombre }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

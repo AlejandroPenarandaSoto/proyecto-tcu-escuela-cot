@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block titulo %}Panel Administrador{% endblock %}
+{% block clase_body %}pagina-admin{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-dashboard">
+    <div class="cabecera-dashboard">
+        <h1 class="titulo-principal">Panel Administrador</h1>
+        <a href="{{ url_for('auth.logout') }}" class="boton boton-secundario">Cerrar sesión</a>
+    </div>
+
+    <p class="subtitulo">Selecciona un grado para editar su contenido.</p>
+
+    <div class="grid-tarjetas">
+        {% for grado in grados %}
+            {% if grado.tiene_materias %}
+                <div class="tarjeta-grado-admin">
+                    <h3>{{ grado.nombre }}</h3>
+                    <div class="lista-materias-admin">
+                        {% for materia in materias %}
+                        <a href="{{ url_for('admin.editar_contenido', grado_id=grado.id, materia_id=materia.id) }}"
+                           class="chip-materia">
+                            {{ materia.nombre }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('admin.editar_contenido', grado_id=grado.id) }}" class="tarjeta tarjeta-grado">
+                    <span class="tarjeta-nombre">{{ grado.nombre }}</span>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

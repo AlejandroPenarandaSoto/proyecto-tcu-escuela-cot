@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block titulo %}Escuela Cot - Elige tu grado{% endblock %}
+{% block clase_body %}pagina-estudiante{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-seleccion">
+    <h1 class="titulo-principal">¿En qué grado estás? 🎒</h1>
+    <div class="grid-tarjetas">
+        {% for grado in grados %}
+        <a href="{{ url_for('estudiante.ver_grado', grado_slug=grado.slug) }}" class="tarjeta tarjeta-grado">
+            <span class="tarjeta-nombre">{{ grado.nombre }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

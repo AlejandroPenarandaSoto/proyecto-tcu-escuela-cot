@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block titulo %}Editar contenido - {{ grado.nombre }}{% endblock %}
+{% block clase_body %}pagina-admin{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-editar-contenido">
+    <a href="{{ url_for('admin.dashboard') }}" class="enlace-volver">&larr; Volver al panel</a>
+
+    <h1 class="titulo-principal">
+        {{ grado.nombre }}{% if materia %} · {{ materia.nombre }}{% endif %}
+    </h1>
+
+    <form method="POST" enctype="multipart/form-data" class="formulario-contenido">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo" required>
+
+        <label for="tipo">Tipo de contenido</label>
+        <select id="tipo" name="tipo" onchange="mostrarCampoSegunTipo(this.value)">
+            {% for tipo in tipos %}
+            <option value="{{ tipo }}">{{ tipo|capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <div id="campo-texto" class="campo-dinamico">
+            <label for="cuerpo">Texto / URL</label>
+            <textarea id="cuerpo" name="cuerpo" rows="4"
+                placeholder="Texto plano, o URL si es video/enlace"></textarea>
+        </div>
+
+        <div id="campo-archivo" class="campo-dinamico" style="display:none;">
+            <label for="archivo">Archivo</label>
+            <input type="file" id="archivo" name="archivo">
+        </div>
+
+        <label for="orden">Orden de aparición</label>
+        <input type="number" id="orden" name="orden" value="0" min="0">
+
+        <button type="submit" class="boton boton-primario">Agregar contenido</button>
+    </form>
+
+    <hr>
+
+    <h2>Contenido actual</h2>
+    {% if contenidos %}
+    <table class="tabla-contenido">
+        <thead>
+            <tr>
+                <th>Orden</th>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contenidos %}
+            <tr>
+                <td>{{ c.orden }}</td>
+                <td>{{ c.titulo }}</td>
+                <td>{{ c.tipo }}</td>
+                <td>{{ "Activo" if c.activo else "Oculto" }}</td>
+                <td class="acciones-tabla">
+                    <form method="POST" action="{{ url_for('admin.toggle_contenido', contenido_id=c.id) }}">
+                        <button type="submit" class="boton boton-chico">
+                            {{ "Ocultar" if c.activo else "Mostrar" }}
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin.eliminar_contenido', contenido_id=c.id) }}">
+                        <button type="submit" class="boton boton-chico boton-peligro"
+                            onclick="return confirm('¿Eliminar este contenido?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Todavía no hay contenido agregado.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

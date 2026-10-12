@@ -1,0 +1,31 @@
+# Entorno virtual
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Base de datos SQLite
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Variables de entorno
+.env
+
+# Archivos subidos por el admin (material educativo)
+src/vista/static/uploads/
+
+# Migraciones generadas (opcional, según se decida versionar o no)
+# src/db/migrations/versions/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

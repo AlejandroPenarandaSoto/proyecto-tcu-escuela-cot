@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    {{ grado.nombre }}{% if materia %} - {{ materia.nombre }}{% endif %}
+{% endblock %}
+{% block clase_body %}pagina-estudiante{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-contenido">
+    {% if materia %}
+        <a href="{{ url_for('estudiante.ver_grado', grado_slug=grado.slug) }}" class="enlace-volver">&larr; Cambiar de materia</a>
+    {% else %}
+        <a href="{{ url_for('estudiante.seleccion_grado') }}" class="enlace-volver">&larr; Cambiar de grado</a>
+    {% endif %}
+
+    <h1 class="titulo-principal">
+        {{ grado.nombre }}{% if materia %} · {{ materia.nombre }}{% endif %}
+    </h1>
+
+    {% if contenidos %}
+        <div class="lista-contenido">
+            {% for c in contenidos %}
+            <article class="bloque-contenido bloque-{{ c.tipo }}">
+                <h2>{{ c.titulo }}</h2>
+
+                {% if c.tipo == 'texto' %}
+                    <p>{{ c.cuerpo }}</p>
+
+                {% elif c.tipo == 'enlace' %}
+                    <a href="{{ c.cuerpo }}" target="_blank" rel="noopener">Abrir enlace</a>
+
+                {% elif c.tipo == 'video' %}
+                    <div class="video-wrapper">
+                        <iframe src="{{ c.cuerpo }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+
+                {% elif c.tipo == 'imagen' %}
+                    <img src="{{ url_for('static', filename='uploads/' + c.cuerpo) }}" alt="{{ c.titulo }}">
+
+                {% elif c.tipo == 'archivo' %}
+                    <a href="{{ url_for('static', filename='uploads/' + c.cuerpo) }}" target="_blank">
+                        Descargar material
+                    </a>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="sin-contenido">Todavía no hay material publicado aquí. ¡Vuelve pronto! 📚</p>
+    {% endif %}
+</section>
+{% endblock %}
