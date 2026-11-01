@@ -1,21 +1,25 @@
 {% extends "base.html" %}
 
 {% block titulo %}Panel Administrador{% endblock %}
-{% block clase_body %}pagina-admin{% endblock %}
+{% block clase_body %}pagina-admin pagina-dashboard{% endblock %}
 
 {% block contenido %}
 <section class="pantalla-dashboard">
     <div class="cabecera-dashboard">
-        <h1 class="titulo-principal">Panel Administrador</h1>
-        <a href="{{ url_for('auth.logout') }}" class="boton boton-secundario">Cerrar sesión</a>
+        <div>
+            <h1 class="titulo-principal">Panel Administrador</h1>
+            <p class="subtitulo">Elige qué quieres administrar: el material educativo o los juegos. ✨</p>
+        </div>
+        <a href="{{ url_for('estudiante.seleccion_grado') }}" class="boton boton-secundario">👀 Ver sitio de estudiantes</a>
     </div>
 
-    <p class="subtitulo">Selecciona un grado para editar su contenido.</p>
+    <h2 class="titulo-bloque-admin">📚 Material educativo</h2>
+    <p class="subtitulo">Selecciona un grado (y materia) para agregar o editar su material.</p>
 
-    <div class="grid-tarjetas">
+    <div class="grid-tarjetas grid-admin">
         {% for grado in grados %}
             {% if grado.tiene_materias %}
-                <div class="tarjeta-grado-admin">
+                <div class="tarjeta-grado-admin color-borde-{{ loop.index0 % 6 }}">
                     <h3>{{ grado.nombre }}</h3>
                     <div class="lista-materias-admin">
                         {% for materia in materias %}
@@ -27,10 +31,26 @@
                     </div>
                 </div>
             {% else %}
-                <a href="{{ url_for('admin.editar_contenido', grado_id=grado.id) }}" class="tarjeta tarjeta-grado">
+                <a href="{{ url_for('admin.editar_contenido', grado_id=grado.id) }}"
+                   class="tarjeta tarjeta-grado color-{{ loop.index0 % 6 }}">
+                    <span class="tarjeta-icono">🧸</span>
                     <span class="tarjeta-nombre">{{ grado.nombre }}</span>
                 </a>
             {% endif %}
+        {% endfor %}
+    </div>
+
+    <h2 class="titulo-bloque-admin titulo-bloque-juegos">🎮 Juegos</h2>
+    <p class="subtitulo">Los juegos se organizan por ciclo, no por grado.</p>
+
+    <div class="grid-tarjetas grid-admin">
+        {% for ciclo in ciclos %}
+        <a href="{{ url_for('admin.editar_juegos', ciclo_id=ciclo.id) }}"
+           class="tarjeta tarjeta-ciclo ciclo-{{ loop.index0 % 3 }}">
+            <span class="tarjeta-icono">🎮</span>
+            <span class="tarjeta-nombre">{{ ciclo.nombre }}</span>
+            {% if ciclo.descripcion %}<span class="tarjeta-detalle">{{ ciclo.descripcion }}</span>{% endif %}
+        </a>
         {% endfor %}
     </div>
 </section>

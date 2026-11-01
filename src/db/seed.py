@@ -2,8 +2,11 @@
 DB: Seed inicial.
 
 Crea todas las tablas (si no existen) y carga los datos fijos de
-Grados y Materias, que no dependen del administrador: son parte
-de la estructura curricular de la escuela.
+Grados, Materias y Ciclos, que no dependen del administrador: son
+parte de la estructura de la escuela.
+
+Se puede ejecutar varias veces sin duplicar datos (por ejemplo, para
+agregar los Ciclos a una base de datos que ya existía).
 
 Uso:
     python -m src.db.seed
@@ -11,6 +14,7 @@ Uso:
 
 from src.main import crear_app
 from src.model import db
+from src.model.ciclo import Ciclo
 from src.model.grado import Grado
 from src.model.materia import Materia
 
@@ -38,6 +42,13 @@ MATERIAS = [
     ("Educación Física", "educacion-fisica", 8),
 ]
 
+CICLOS = [
+    # (nombre, slug, descripcion, orden)
+    ("Preescolar", "preescolar", "Interactivo y Transición", 1),
+    ("Primer Ciclo", "primer-ciclo", "Primero a Tercero", 2),
+    ("Segundo Ciclo", "segundo-ciclo", "Cuarto a Sexto", 3),
+]
+
 
 def poblar_grados_y_materias():
     for nombre, slug, tiene_materias, orden in GRADOS:
@@ -59,8 +70,20 @@ def poblar_grados_y_materias():
     print("Grados y materias cargados correctamente.")
 
 
+def poblar_ciclos():
+    for nombre, slug, descripcion, orden in CICLOS:
+        if not Ciclo.query.filter_by(slug=slug).first():
+            db.session.add(
+                Ciclo(nombre=nombre, slug=slug, descripcion=descripcion, orden=orden)
+            )
+
+    db.session.commit()
+    print("Ciclos (juegos) cargados correctamente.")
+
+
 if __name__ == "__main__":
     app = crear_app()
     with app.app_context():
         db.create_all()
         poblar_grados_y_materias()
+        poblar_ciclos()

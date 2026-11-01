@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block titulo %}Editar juegos - {{ ciclo.nombre }}{% endblock %}
+{% block clase_body %}pagina-admin seccion-juegos{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-editar-contenido">
+    <a href="{{ url_for('admin.dashboard') }}" class="enlace-volver">&larr; Volver al panel</a>
+
+    <h1 class="titulo-principal">🎮 Juegos · {{ ciclo.nombre }}</h1>
+    {% if ciclo.descripcion %}<p class="subtitulo">{{ ciclo.descripcion }}</p>{% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="formulario-contenido">
+        <label for="titulo">Título del juego</label>
+        <input type="text" id="titulo" name="titulo" required>
+
+        <label for="tipo">Tipo de contenido</label>
+        <select id="tipo" name="tipo" onchange="mostrarCampoSegunTipo(this.value)">
+            {% for tipo in tipos %}
+            <option value="{{ tipo }}" {% if tipo == 'enlace' %}selected{% endif %}>{{ tipo|capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <div id="campo-texto" class="campo-dinamico">
+            <label for="cuerpo">Texto / URL</label>
+            <textarea id="cuerpo" name="cuerpo" rows="4"
+                placeholder="Texto plano, o URL si es juego en línea / video"></textarea>
+        </div>
+
+        <div id="campo-archivo" class="campo-dinamico" style="display:none;">
+            <label for="archivo">Archivo</label>
+            <input type="file" id="archivo" name="archivo">
+        </div>
+
+        <label for="orden">Orden de aparición</label>
+        <input type="number" id="orden" name="orden" value="0" min="0">
+
+        <button type="submit" class="boton boton-primario">Agregar juego</button>
+    </form>
+
+    <hr>
+
+    <h2>Juegos actuales</h2>
+    {% if juegos %}
+    <table class="tabla-contenido">
+        <thead>
+            <tr>
+                <th>Orden</th>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for j in juegos %}
+            <tr>
+                <td>{{ j.orden }}</td>
+                <td>{{ j.titulo }}</td>
+                <td>{{ j.tipo }}</td>
+                <td>{{ "Activo" if j.activo else "Oculto" }}</td>
+                <td class="acciones-tabla">
+                    <form method="POST" action="{{ url_for('admin.toggle_juego', juego_id=j.id) }}">
+                        <button type="submit" class="boton boton-chico">
+                            {{ "Ocultar" if j.activo else "Mostrar" }}
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin.eliminar_juego', juego_id=j.id) }}">
+                        <button type="submit" class="boton boton-chico boton-peligro"
+                            onclick="return confirm('¿Eliminar este juego?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Todavía no hay juegos agregados.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

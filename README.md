@@ -1,4 +1,4 @@
-# Proyecto TCU - Escuela Cot
+# Proyecto TCU - Escuela León Cortés Castro
 
 Aplicación web educativa para la escuela, desarrollada con arquitectura **MVC** (Modelo-Vista-Controlador).
 
@@ -15,10 +15,12 @@ Aplicación web educativa para la escuela, desarrollada con arquitectura **MVC**
    - El estudiante elige su grado: Preescolar Interactivo, Preescolar Transición, Primero, Segundo, Tercero, Cuarto, Quinto, Sexto.
    - De Primero a Sexto, además elige la materia: Ciencias, Matemática, Español, Estudios Sociales, Inglés, Religión, Educación Musical, Educación Física.
    - Visualiza el contenido/material cargado por el administrador para esa combinación grado-materia.
+   - **Juegos:** sección aparte, organizada por ciclo (Preescolar, Primer Ciclo, Segundo Ciclo) en lugar de por grado.
 
 2. **Módulo Administrador** (requiere usuario y contraseña):
    - Inicio de sesión.
    - CRUD del contenido/material que se muestra en cada grado y materia.
+   - CRUD de los juegos de cada ciclo (mismos tipos de contenido que el material: texto, video, imagen, archivo y enlace).
 
 ## Estructura del proyecto
 
@@ -56,7 +58,8 @@ pip install -r requirements.txt
 # En Windows (PowerShell): $env:FLASK_ENV="development"
 export FLASK_ENV=development
 
-# 4. Inicializar base de datos (crea tablas + datos iniciales de grados/materias)
+# 4. Inicializar base de datos (crea tablas + datos iniciales de grados, materias y ciclos)
+#    Si ya tenías una base de datos, vuelve a ejecutarlo: agrega las tablas de juegos sin borrar nada.
 python -m src.db.seed
 
 # 5. Ejecutar la aplicación
@@ -80,9 +83,12 @@ Esto te pedirá un usuario y contraseña para el primer administrador del sistem
 | `/` | Estudiante | Selección de grado |
 | `/grado/<grado_slug>` | Estudiante | Selección de materia (o contenido directo si es preescolar) |
 | `/grado/<grado_slug>/materia/<materia_slug>` | Estudiante | Contenido de esa materia y grado |
+| `/juegos` | Estudiante | Selección de ciclo (juegos) |
+| `/juegos/<ciclo_slug>` | Estudiante | Juegos de ese ciclo |
 | `/admin/login` | Admin | Inicio de sesión |
 | `/admin/dashboard` | Admin | Panel principal, listado de grados/materias |
 | `/admin/contenido/<grado_id>/<materia_id>` | Admin | Editar contenido de un grado-materia |
+| `/admin/juegos/<ciclo_id>` | Admin | Editar los juegos de un ciclo |
 | `/admin/logout` | Admin | Cerrar sesión |
 
 ## Próximos pasos sugeridos

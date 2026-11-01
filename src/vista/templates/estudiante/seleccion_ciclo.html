@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block titulo %}Juegos - Escuela León Cortés Castro{% endblock %}
+{% block clase_body %}pagina-estudiante seccion-juegos{% endblock %}
+
+{% set iconos_ciclo = {
+    'preescolar': '🧸',
+    'primer-ciclo': '🚀',
+    'segundo-ciclo': '🏆'
+} %}
+
+{% block hero %}
+<section class="hero hero-juegos">
+    <span class="figura figura-1">🎲</span>
+    <span class="figura figura-2">🧩</span>
+    <span class="figura figura-3">🕹️</span>
+    <span class="figura figura-4">🏅</span>
+    <div class="hero-contenido">
+        <p class="hero-etiqueta">Zona de juegos 🎮</p>
+        <h1>¡A <span class="resaltado">jugar</span> y aprender!</h1>
+        <p class="hero-texto">Elige tu ciclo y encuentra juegos pensados para ti.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-seleccion">
+    <h2 class="titulo-seccion">¿En qué ciclo estás? 🕹️</h2>
+    <div class="grid-tarjetas grid-ciclos">
+        {% for ciclo in ciclos %}
+        <a href="{{ url_for('estudiante.ver_juegos', ciclo_slug=ciclo.slug) }}"
+           class="tarjeta tarjeta-ciclo ciclo-{{ loop.index0 % 3 }}">
+            <span class="tarjeta-icono">{{ iconos_ciclo.get(ciclo.slug, '🎮') }}</span>
+            <span class="tarjeta-nombre">{{ ciclo.nombre }}</span>
+            {% if ciclo.descripcion %}<span class="tarjeta-detalle">{{ ciclo.descripcion }}</span>{% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

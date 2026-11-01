@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block titulo %}Juegos - {{ ciclo.nombre }}{% endblock %}
+{% block clase_body %}pagina-estudiante seccion-juegos{% endblock %}
+
+{% set iconos_tipo = {
+    'texto': '📝', 'video': '🎬', 'imagen': '🖼️', 'archivo': '📎', 'enlace': '🎮'
+} %}
+
+{% block hero %}
+<section class="hero hero-juegos hero-chico">
+    <div class="hero-contenido">
+        <a href="{{ url_for('estudiante.seleccion_ciclo') }}" class="enlace-volver enlace-claro">&larr; Cambiar de ciclo</a>
+        <h1>🎮 Juegos · {{ ciclo.nombre }}</h1>
+        {% if ciclo.descripcion %}<p class="hero-texto">{{ ciclo.descripcion }}</p>{% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block contenido %}
+<section class="pantalla-contenido">
+
+    {% if current_user.is_authenticated %}
+    <div class="aviso-admin">
+        <span>👩‍🏫 Estás viendo esta página como administrador.</span>
+        <a class="boton boton-primario boton-chico"
+           href="{{ url_for('admin.editar_juegos', ciclo_id=ciclo.id) }}">
+            ➕ Agregar juego aquí
+        </a>
+    </div>
+    {% endif %}
+
+    {% if juegos %}
+        <div class="lista-juegos">
+            {% for j in juegos %}
+            <article class="tarjeta-juego juego-{{ j.tipo }} juego-color-{{ loop.index0 % 4 }}">
+                <div class="juego-cabecera">
+                    <span class="juego-icono">{{ iconos_tipo.get(j.tipo, '🎮') }}</span>
+                    <h2>{{ j.titulo }}</h2>
+                </div>
+
+                <div class="juego-cuerpo">
+                {% if j.tipo == 'texto' %}
+                    <p>{{ j.cuerpo }}</p>
+
+                {% elif j.tipo == 'enlace' %}
+                    <a href="{{ j.cuerpo }}" target="_blank" rel="noopener" class="boton boton-jugar">▶ ¡Jugar!</a>
+
+                {% elif j.tipo == 'video' %}
+                    <div class="video-wrapper">
+                        <iframe src="{{ j.cuerpo }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+
+                {% elif j.tipo == 'imagen' %}
+                    <img src="{{ url_for('static', filename='uploads/' + j.cuerpo) }}" alt="{{ j.titulo }}">
+
+                {% elif j.tipo == 'archivo' %}
+                    <a href="{{ url_for('static', filename='uploads/' + j.cuerpo) }}" target="_blank" class="boton boton-jugar">
+                        ⬇️ Descargar juego
+                    </a>
+                {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="sin-contenido">
+            <span class="sin-contenido-icono">🕹️</span>
+            <p>Todavía no hay juegos en este ciclo.</p>
+            <p>¡Muy pronto habrá diversión!</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
